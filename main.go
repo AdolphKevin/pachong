@@ -73,7 +73,7 @@ func main() {
 			break
 		}
 		// 创建定时器
-		time.Sleep(time.Second * 4)
+		time.Sleep(time.Second * 5)
 	}
 
 	//	结束语
