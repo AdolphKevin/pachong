@@ -16,11 +16,6 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func init() {
-	provinceMap = make(map[string]string)
-	cityMap = make(map[string]string)
-}
-
 func main() {
 	transportUrl := "https://www.tdict.com/tdictajax/tdictajax_new.asp?action=query&stype=dmyd&sclass=0&q="
 
