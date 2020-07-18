@@ -269,7 +269,6 @@ func doneProvinceMap() {
 	provinceMap["Kazan"] = "喀山"
 	provinceMap["Lausanne"] = "洛桑"
 	provinceMap["Caceres"] = "卡塞雷斯"
-
 }
 
 func doneCityMap() {
@@ -340,4 +339,12 @@ func doneCityMap() {
 	cityMap["Calgary"] = "卡尔加里"
 	cityMap["Dongducheon"] = "东豆川"
 	cityMap["Coventry"] = "考文垂"
+	cityMap["Marysville"] = "马里斯维尔"
+	cityMap["Eastern"] = "东方"
+	cityMap["Worcester"] = "伍斯特"
+	cityMap["Grand Prairie"] = "大草原城"
+	cityMap["Hobart"] = "霍巴特"
+	cityMap["Yorkton"] = "约克顿"
+	cityMap["Osaka"] = "小坂"
+	cityMap["Yichun"] = "伊春"
 }
