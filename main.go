@@ -32,9 +32,10 @@ func main() {
 	defer f.Close()
 
 	doneCityMap()
+	doneProvinceMap()
+
 	// Instantiate default collector
 	c := colly.NewCollector()
-
 	// After making a request get "url" from
 	// the context of the request
 	c.OnResponse(func(r *colly.Response) {
