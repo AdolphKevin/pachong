@@ -26,6 +26,7 @@ func main() {
 	}
 	defer f.Close()
 	doneProvinceMap()
+	doneCityMap()
 	// Instantiate default collector
 	c := colly.NewCollector(colly.AllowURLRevisit())
 
