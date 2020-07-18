@@ -39,8 +39,7 @@ func main() {
 			fmt.Printf("转数据结构失败:%v\n", err)
 			return
 		}
-
-		if st[0].Name == nil {
+		if len(st[0].Name) == 0 {
 			// 尝试解析，是否被封杀了IP
 			var errMsg []*ErrorMsg
 			err := json.Unmarshal(r.Body, &errMsg)
