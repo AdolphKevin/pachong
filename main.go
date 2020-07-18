@@ -16,6 +16,11 @@ import (
 	"github.com/gocolly/colly"
 )
 
+func init() {
+	provinceMap = make(map[string]string)
+	cityMap = make(map[string]string)
+}
+
 func main() {
 	transportUrl := "https://www.tdict.com/tdictajax/tdictajax_new.asp?action=query&stype=dmyd&sclass=0&q="
 
@@ -87,7 +92,6 @@ func main() {
 		if _, ok := cityMap[english]; ok {
 			continue
 		}
-
 		// 将请求参数中的空格用%20代替
 		english = strings.Replace(english, " ", "%20", -1)
 		// 拼接URL
