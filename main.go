@@ -26,13 +26,12 @@ func main() {
 	}
 	defer f.Close()
 	doneProvinceMap()
-	doneCityMap()
+	//doneCityMap()
 	// Instantiate default collector
 	c := colly.NewCollector(colly.AllowURLRevisit())
 
 	// After making a request get "url" from
 	// the context of the request
-
 	c.OnResponse(func(r *colly.Response) {
 		var st []*City
 		err := json.Unmarshal(r.Body, &st)
@@ -76,6 +75,12 @@ func main() {
 		// 创建定时器
 		time.Sleep(time.Second * 4)
 	}
+
+	// 结束后来个结尾语
+	w := bufio.NewWriter(f)
+	lineStr := fmt.Sprintf("%s", "已经结束")
+	fmt.Fprintln(w, lineStr)
+	w.Flush()
 }
 
 type City struct {
