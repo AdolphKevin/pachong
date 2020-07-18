@@ -3,6 +3,8 @@ package main
 var provinceMap map[string]string
 
 func doneProvinceMap() {
+	provinceMap = make(map[string]string)
+
 	provinceMap["Chalons-en-Champagne"] = "香槟地区沙隆"
 	provinceMap["Jiangxi Town"] = "姜席镇"
 	provinceMap["Gisborne L."] = "吉斯伯恩湖"

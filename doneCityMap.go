@@ -3,6 +3,8 @@ package main
 var cityMap map[string]string
 
 func doneCityMap() {
+	cityMap = make(map[string]string)
+
 	cityMap["Buyant Gol"] = "布彦特河"
 	cityMap["Terrace"] = "特勒斯"
 	cityMap["Banan District"] = "巴南区(重庆市重庆市市辖区下辖的区)"
