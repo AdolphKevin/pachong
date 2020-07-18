@@ -19,13 +19,13 @@ import (
 func main() {
 	transportUrl := "https://www.tdict.com/tdictajax/tdictajax_new.asp?action=query&stype=dmyd&sclass=0&q="
 
-	f, err := os.OpenFile("/home/dev/go/src/github.com/AdolphKevin/pachong/transport.txt", os.O_RDWR|os.O_CREATE, 0666)
+	f, err := os.OpenFile("./transport.txt", os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer f.Close()
-
+	doneProvinceMap()
 	// Instantiate default collector
 	c := colly.NewCollector(colly.AllowURLRevisit())
 

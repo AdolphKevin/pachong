@@ -4,6 +4,8 @@ var provinceMap map[string]string
 var cityMap map[string]string
 
 func doneProvinceMap() {
+	provinceMap= make(map[string]string)
+
 	provinceMap["Penza"] = "奔萨"
 	provinceMap["Santa Catarina"] = "圣卡塔琳娜"
 	provinceMap["Gaziantep"] = "加济安泰普"
@@ -144,5 +146,5 @@ func doneProvinceMap() {
 }
 
 func doneCityMap() {
-
+	cityMap=make(map[string]string)
 }
