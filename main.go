@@ -25,7 +25,6 @@ func main() {
 		return
 	}
 	defer f.Close()
-	doneProvinceMap()
 	doneCityMap()
 	// Instantiate default collector
 	c := colly.NewCollector(colly.AllowURLRevisit())
@@ -43,12 +42,12 @@ func main() {
 		for _, value := range st {
 			for _, v := range value.Name {
 				// 判断字符串是否包含地名
-				if mapVal, ok := transport.ProvinceMap[v.EnglishName]; ok {
+				if mapVal, ok := transport.CityMap[v.EnglishName]; ok {
 					// 去重
 					if mapVal == "" {
-						transport.ProvinceMap[v.EnglishName] = v.ChineseName
+						transport.CityMap[v.EnglishName] = v.ChineseName
 						w := bufio.NewWriter(f)
-						lineStr := fmt.Sprintf("provinceMap[\"%s\"] = \"%s\"", v.EnglishName, v.ChineseName)
+						lineStr := fmt.Sprintf("cityMap[\"%s\"] = \"%s\"", v.EnglishName, v.ChineseName)
 						fmt.Fprintln(w, lineStr)
 						w.Flush()
 					}
@@ -58,7 +57,7 @@ func main() {
 		}
 	})
 
-	for english, _ := range transport.ProvinceMap {
+	for english, _ := range transport.CityMap {
 		// 将请求参数中的空格用%20代替
 		english = strings.Replace(english, " ", "%20", -1)
 		// 拼接URL
@@ -76,6 +75,12 @@ func main() {
 		// 创建定时器
 		time.Sleep(time.Second * 4)
 	}
+
+	//	结束语
+	w := bufio.NewWriter(f)
+	lineStr := fmt.Sprintf("%s", "已经结束")
+	fmt.Fprintln(w, lineStr)
+	w.Flush()
 }
 
 type City struct {
