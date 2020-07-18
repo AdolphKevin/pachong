@@ -25,13 +25,13 @@ func main() {
 		return
 	}
 	defer f.Close()
+
 	doneCityMap()
 	// Instantiate default collector
-	c := colly.NewCollector(colly.AllowURLRevisit())
+	c := colly.NewCollector()
 
 	// After making a request get "url" from
 	// the context of the request
-
 	c.OnResponse(func(r *colly.Response) {
 		var st []*City
 		err := json.Unmarshal(r.Body, &st)
@@ -39,25 +39,56 @@ func main() {
 			fmt.Printf("转数据结构失败:%v\n", err)
 			return
 		}
+
+		if st[0].Name == nil {
+			// 尝试解析，是否被封杀了IP
+			var errMsg []*ErrorMsg
+			err := json.Unmarshal(r.Body, &errMsg)
+			if err != nil {
+				fmt.Printf("转数据结构失败:%v\n", err)
+				return
+			}
+			if errMsg[0].ErrMsg == "Sorry,you are denied! Problem Id:951" {
+				fmt.Println("IP已被封杀")
+				//os.Exit(0)
+				return
+			}
+
+			// 获取请求的英语
+			q := r.Request.URL.Query()
+			queryEnglish := make([]string, 1)
+			queryEnglish = q["q"]
+
+			// 查不到内容
+			w := bufio.NewWriter(f)
+			lineStr := fmt.Sprintf("cityMap[\"%s\"] = \"%s\"", queryEnglish[0], "QueryFalse")
+			fmt.Fprintln(w, lineStr)
+			w.Flush()
+			return
+		}
 		for _, value := range st {
 			for _, v := range value.Name {
-				// 判断字符串是否包含地名
-				if mapVal, ok := transport.CityMap[v.EnglishName]; ok {
+				// 记录抓取内容
+				_, ok := transport.CityMap[v.EnglishName]
+				if !ok {
 					// 去重
-					if mapVal == "" {
-						transport.CityMap[v.EnglishName] = v.ChineseName
-						w := bufio.NewWriter(f)
-						lineStr := fmt.Sprintf("cityMap[\"%s\"] = \"%s\"", v.EnglishName, v.ChineseName)
-						fmt.Fprintln(w, lineStr)
-						w.Flush()
-					}
+					transport.CityMap[v.EnglishName] = v.ChineseName
+					w := bufio.NewWriter(f)
+					lineStr := fmt.Sprintf("cityMap[\"%s\"] = \"%s\"", v.EnglishName, v.ChineseName)
+					fmt.Fprintln(w, lineStr)
+					w.Flush()
 				}
 			}
 			fmt.Printf("value:%v\n", value)
 		}
 	})
 
-	for english, _ := range transport.CityMap {
+	for _, english := range transport.CityArr {
+		// 判断是否已经记录
+		if _, ok := cityMap[english]; ok {
+			continue
+		}
+
 		// 将请求参数中的空格用%20代替
 		english = strings.Replace(english, " ", "%20", -1)
 		// 拼接URL
@@ -73,10 +104,9 @@ func main() {
 			break
 		}
 		// 创建定时器
-		time.Sleep(time.Second * 5)
+		time.Sleep(time.Millisecond * 3500)
 	}
-
-	//	结束语
+	// 结束后来个结尾语
 	w := bufio.NewWriter(f)
 	lineStr := fmt.Sprintf("%s", "已经结束")
 	fmt.Fprintln(w, lineStr)
@@ -91,6 +121,10 @@ type CityName struct {
 	Explain     string `json:"cls1"`
 	ChineseName string `json:"cntxt"`
 	EnglishName string `json:"entxt"`
+}
+
+type ErrorMsg struct {
+	ErrMsg string `errmsg`
 }
 
 // 获取一个随机时间
