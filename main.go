@@ -64,12 +64,6 @@ func main() {
 		// 拼接URL
 		url := fmt.Sprintf("%s%s", transportUrl, english)
 		fmt.Printf("%s,", url)
-		//// Rotate two socks5 proxies
-		//rp, err := proxy.RoundRobinProxySwitcher("socks5://127.0.0.1:1087")
-		//if err != nil {
-		//	fmt.Println("proxy.RoundRobinProxySwitcher err :", err)
-		//}
-		//c.SetProxyFunc(rp)
 		// 随机用户代理
 		extensions.RandomUserAgent(c)
 		fmt.Println()
@@ -80,7 +74,7 @@ func main() {
 			break
 		}
 		// 创建定时器
-		time.Sleep(time.Second * time.Duration(getRandomInt()))
+		time.Sleep(time.Second * 4)
 	}
 }
 
