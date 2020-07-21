@@ -76,7 +76,7 @@ func main() {
 		}
 	})
 
-	for _, english := range transport.CityArr {
+	for _, english := range transport.RemainCity {
 		// 判断是否已经记录
 		if _, ok := cityMap[english]; ok {
 			continue
