@@ -59,7 +59,7 @@ func main() {
 			}
 			// 查不到内容
 			w := bufio.NewWriter(f)
-			lineStr := fmt.Sprintf("cityMap[\"%s\"] = \"%s\"", queryEnglish[0], "QueryFalse")
+			lineStr := fmt.Sprintf("CityMap[\"%s\"] = \"%s\"", queryEnglish[0], "QueryFalse")
 			fmt.Fprintln(w, lineStr)
 			w.Flush()
 			return
@@ -68,7 +68,7 @@ func main() {
 			chineseName := removeUnnecessaryString(value.Name[0].ChineseName)
 			// 直接文本记录
 			w := bufio.NewWriter(f)
-			lineStr := fmt.Sprintf("cityMap[\"%s\"] = \"%s\"", queryEnglish[0], chineseName)
+			lineStr := fmt.Sprintf("CityMap[\"%s\"] = \"%s\"", queryEnglish[0], chineseName)
 			fmt.Fprintln(w, lineStr)
 			w.Flush()
 
@@ -85,10 +85,9 @@ func main() {
 		english = strings.Replace(english, " ", "%20", -1)
 		// 拼接URL
 		url := fmt.Sprintf("%s%s", transportUrl, english)
-		fmt.Printf("%s,", url)
+		fmt.Printf("%s\n,", url)
 		// 随机用户代理
 		extensions.RandomUserAgent(c)
-		fmt.Println()
 		// 发起请求
 		err = c.Visit(url)
 		if err != nil {
