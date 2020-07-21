@@ -39,6 +39,10 @@ func main() {
 			fmt.Printf("转数据结构失败:%v\n", err)
 			return
 		}
+		// 获取请求的英语
+		q := r.Request.URL.Query()
+		queryEnglish := make([]string, 1)
+		queryEnglish = q["q"]
 
 		if len(st[0].Name) == 0 {
 			// 尝试解析，是否被封杀了IP
@@ -53,37 +57,26 @@ func main() {
 				//os.Exit(0)
 				return
 			}
-			// 获取请求的英语
-			q := r.Request.URL.Query()
-			queryEnglish := make([]string, 1)
-			queryEnglish = q["q"]
-
 			// 查不到内容
 			w := bufio.NewWriter(f)
-			lineStr := fmt.Sprintf("provinceMap[\"%s\"] = \"%s\"", queryEnglish[0], "QueryFalse")
+			lineStr := fmt.Sprintf("ProvinceMap[\"%s\"] = \"%s\"", queryEnglish[0], "QueryFalse")
 			fmt.Fprintln(w, lineStr)
 			w.Flush()
 			return
-
 		}
 		for _, value := range st {
-			for _, v := range value.Name {
-				// 记录抓取内容
-				_, ok := transport.ProvinceMap[v.EnglishName]
-				if !ok {
-					// 去重
-					transport.ProvinceMap[v.EnglishName] = v.ChineseName
-					w := bufio.NewWriter(f)
-					lineStr := fmt.Sprintf("provinceMap[\"%s\"] = \"%s\"", v.EnglishName, v.ChineseName)
-					fmt.Fprintln(w, lineStr)
-					w.Flush()
-				}
-			}
+			chineseName := removeUnnecessaryString(value.Name[0].ChineseName)
+			// 直接文本记录
+			w := bufio.NewWriter(f)
+			lineStr := fmt.Sprintf("ProvinceMap[\"%s\"] = \"%s\"", queryEnglish[0], chineseName)
+			fmt.Fprintln(w, lineStr)
+			w.Flush()
+
 			fmt.Printf("value:%v\n", value)
 		}
 	})
 
-	for _, english := range transport.ProvinceArr {
+	for _, english := range transport.RemainProvince {
 		// 判断是否已经记录
 		if _, ok := provinceMap[english]; ok {
 			continue
@@ -95,7 +88,6 @@ func main() {
 		fmt.Printf("%s,", url)
 		// 随机用户代理
 		extensions.RandomUserAgent(c)
-		fmt.Println()
 		// 发起请求
 		err = c.Visit(url)
 		if err != nil {
@@ -111,6 +103,22 @@ func main() {
 	lineStr := fmt.Sprintf("%s", "已经结束")
 	fmt.Fprintln(w, lineStr)
 	w.Flush()
+}
+
+func removeUnnecessaryString(name string) string {
+	// 移除省、市、区以及括号内的字符串
+	name = strings.Replace(name, "省", "", -1)
+	name = strings.Replace(name, "市", "", -1)
+	name = strings.Replace(name, "区", "", -1)
+	name = strings.Replace(name, "县", "", -1)
+	var newName strings.Builder
+	for _, char := range name {
+		if char == '(' {
+			break
+		}
+		newName.WriteString(fmt.Sprintf("%c", char))
+	}
+	return newName.String()
 }
 
 type City struct {
